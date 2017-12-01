@@ -1,0 +1,49 @@
+.navbar
+  justify-content: center
+  align-items: center
+  display: flex
+  //height: 46px
+
+  padding: 0 10px
+  border: 1px solid rgba(238,238,238 ,1)
+  border-radius: 5px
+  color: black
+
+  .home
+    margin-left: 10px
+    margin-right: auto
+  .registration
+    margin-right: 10px
+
+  > *
+    padding-top: 10px
+    padding-bottom: 10px
+    cursor: pointer
+    margin-right: 10px
+    &:hover
+      color: rgba(85,172,238 ,1)
+    a
+      text-decoration: none
+      &:hover
+        text-decoration: underline
+
+@media (max-width: 650px)
+  .navbar
+    flex-wrap: wrap
+    justify-content: center
+    align-items: center
+    display: flex
+    > *
+      padding-left: 10px
+    .home
+      margin-left: 0
+      order: 0 !important
+    .maps
+      order: 1 !important
+      width: 100%
+    .login
+      order: 2 !important
+      width: 100%
+    .registration
+      order: 3 !important
+      width: 100%
