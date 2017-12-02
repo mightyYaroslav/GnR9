@@ -57,7 +57,9 @@ export default withRouter(class Login extends Component {
 
     render() {
         return (
-            <div>
+            <div style={{
+                margin: 8
+            }}>
             <ValidatorForm
                 onSubmit={this.handleSubmit}
             >

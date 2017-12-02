@@ -9,34 +9,39 @@ const db = require('../../models/db')
 const { checkAdmin } = require('../../middlewares/auth')
 
 router.post('/',
-    checkAdmin, [
-    check('title', 'Invalid title')
-        .exists(),
-    check('description', 'Invalid description')
-        .exists(),
-    check('rating', 'Invalid rating')
-        .exists()
-        .matches(/\d\.\d/),
-    check('release_date', 'Invalid date')
-        .exists()
-        .matches(/\d{4}-\d{2}-\d{2}/)
-], (req, res) => {
-    let errors = validationResult(req)
-    const fileIsOk = req.files.cover && /.*(\.png)|(\.jpe?g)|(\.gif)/.test(req.files.cover.name)
-    if (!errors.isEmpty() || !fileIsOk) {
-        if (fileIsOk)
-            errors = errors.array()
-        else
-            errors = errors.array().concat([{ msg: "Image is invalid" }])
-        res.status(400).send({ errors })
-    } else {
-        const album = matchedData(req)
+    checkAdmin,
+    // [
+    //     check('title', 'Invalid title')
+    //         .exists(),
+    //     check('description', 'Invalid description')
+    //         .exists(),
+    //     check('rating', 'Invalid rating')
+    //         .exists()
+    //         .matches(/\d\.\d/),
+    //     check('release_date', 'Invalid date')
+    //         .exists()
+    //         .matches(/\d{4}-\d{2}-\d{2}/)
+    // ],
+    (req, res) => {
+    // console.log('Req: ', req)
+    // let errors = validationResult(req)
+    // const fileIsOk = req.files.cover && /.*(\.png)|(\.jpe?g)|(\.gif)/.test(req.files.cover.name)
+    // if (!errors.isEmpty() || !fileIsOk) {
+    //     if (fileIsOk)
+    //         errors = errors.array()
+    //     else
+    //         errors = errors.array().concat([{ msg: "Image is invalid" }])
+    //     res.status(400).send({ errors })
+    // } else {
+        const album = (req.body)
+        // const album = matchedData(req)
+        // console.log(album)
         db.albums.add({ ...album, image: req.files.cover.data })
             .then(() => res.sendStatus(200))
             .catch(err => {
                 res.status(400).send({ errors: [err] })
             })
-    }
+    // }
 })
 
 module.exports = router

@@ -32,12 +32,17 @@ export default withRouter(class Add extends Component {
     }
 
     handleSubmit() {
+        const formData = new FormData()
+        for (let field in this.state)
+            formData.append(field, this.state[field])
+        console.log(document.querySelector('input[type="file"]').files[0])
+
         fetch('/albums/add', {
             method: 'post',
             headers: {
                 'Authorization': `bearer ${Auth.getToken()}`
             },
-            body: JSON.stringify(this.state)
+            body: formData
         })
             .then(res => {
                 if(res.status === 200)
@@ -48,8 +53,7 @@ export default withRouter(class Add extends Component {
     }
 
     handleFile({ file }) {
-        console.log('lol')
-        this.setState({ cover: file })
+        this.setState({ cover: document.querySelector('input[type="file"]').files[0] })
     }
 
     handleClose() {
@@ -60,6 +64,9 @@ export default withRouter(class Add extends Component {
         return (
             <div>
                 <NavBar/>
+                <div style={{
+                    margin: 8
+                }}>
                 <ValidatorForm
                     onSubmit={this.handleSubmit}
                 >
@@ -87,6 +94,7 @@ export default withRouter(class Add extends Component {
                     autoHideDuration={4000}
                     onRequestClose={this.handleClose}
                 />
+                </div>
             </div>
         )
     }

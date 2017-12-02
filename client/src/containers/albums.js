@@ -16,6 +16,7 @@ const style = {
     top: 'auto',
     right: 20,
     bottom: 20,
+    zIndex: 1,
     left: 'auto',
     position: 'fixed'
 }
@@ -74,20 +75,15 @@ export default withRouter(class Albums extends Component {
             body: JSON.stringify({ id })
         })
             .then(res => {
-                if(res.status === 200)
-                    return res.json()
-                else
-                    this.setState({ serverError: res.statusText})
-            })
-            .then(json => {
-                if (json.error) {
-                    this.setState({serverError: json.error})
-                } else {
+                if(res.status === 200) {
                     const albums = this.state.albums.filter(album => album.id !== id)
-                    this.setState({ albums })
+                    console.log('Filtered albums: ', albums)
+                    this.setState({albums})
+                } else {
+                    this.setState({serverError: res.statusText})
                 }
-
             })
+            .then(json => this.setState({serverError: json.error}))
     }
 
     handleClose() {
@@ -116,12 +112,15 @@ export default withRouter(class Albums extends Component {
                 <LinearProgress/>
                 }
                 {!this.state.loading &&
-                <div>
+                <div style={{
+                    margin: 8
+                }}>
                     <AutoComplete
                         hintText='Search by title'
                         dataSource={this.state.dataSource}
                         onUpdateInput={this.handleSearch}
                         fullWidth={true}
+                        openOnFocus={true}
                     />
                     <DeleteModal
                         open={this.state.dialogOpen}
@@ -132,7 +131,6 @@ export default withRouter(class Albums extends Component {
                     {Auth.isAdmin() &&
                         <FloatingActionButton
                             style={style}
-                            zDepth={2}
                             onClick={() => this.props.history.push('/add')}
                         >
                             <ContentAdd/>
@@ -150,10 +148,16 @@ export default withRouter(class Albums extends Component {
                             <GridTile
                                 key={album.id}
                                 title={album.title}
-                                onClick={(e) => this.props.history.push('/album/' + album.id)}
+                                onClick={(e) => {
+                                    // e.stopPropagation()
+                                    this.props.history.push('/album/' + album.id)
+                                }}
                                 actionIcon={Auth.isAdmin() &&
                                 <IconButton
-                                    onClick={() => this.removeAlbum(album.id) }
+                                    onClick={(e) => {
+                                        this.removeAlbum(album.id)
+                                        e.stopPropagation()
+                                    } }
                                 >
                                     <ContentRemove color="white" />
                                 </IconButton>

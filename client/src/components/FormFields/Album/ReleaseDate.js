@@ -8,6 +8,7 @@ export default class ReleaseDate extends Component {
                 hintText="Pick a date"
                 name="release_date"
                 fullWidth={true}
+                required={true}
                 {...this.props}
             />
         )
